@@ -1,20 +1,31 @@
-SELECT 
-    C.Nome AS 'Nome Cliente',
-    C.CPF AS 'CPF',
-    COALESCE(C.Celular, C.Telefone) AS 'Nº Contato',
-    C.Email AS 'Email',
-    CONCAT(C.Rua, ' ', V.Data_Venda, ' ', Results, M.Nome, ' ', FORMAT(M.Valor, 'C')) AS 'ENDEREÇO, Moto, Preço Moto',
-    M.Cor AS 'Cor',
-    M.Ano AS 'Ano Moto',
-    M.Cilindrada,
-    M.Marca,
-    V.Nm_NF AS 'Nota Fiscal',
-    V.Parcelas,
-    FORMAT(SUM(M.Valor / V.Parcelas) OVER (PARTITION BY V.ID_VENDA), 'C') AS 'Valor Parcela',
-    CASE
-        WHEN V.Parcelas > 1 THEN 'Parcelamento'
-        ELSE 'A Vista'
-    END AS 'Tipo Pagamento'
-FROM Vendas V
-INNER JOIN Moto M ON M.Id_Moto = V.Id_Moto
-INNER JOIN Cliente C ON C.Id_Cliente = V.Id_Cliente;
+CREATE VIEW Dados_Venda AS(
+SELECT
+		C.Nome Cliente,
+		C.Cpf CPF,
+		COALESCE(C.Celular,C.TELEFONE) AS 'Nº Contato',
+		C.Email Email,
+		CONCAT(C.Rua,' - ',C.Bairro,' Nº ',C.Numero) Endereço,
+		V.Data_Venda,
+		M.Nome Moto,
+		FORMAT(M.Valor,'C') AS 'Preço Moto',
+		M.Cor Cor,
+		M.Ano AS 'Ano Moto',
+		M.Marca,
+		V.Nm_Nf AS 'Nota Fiscal',
+		V.Parcelas,
+		FORMAT(SUM(M.Valor/V.Parcelas) OVER(PARTITION BY V.ID_VENDA),'C') AS 'Valor Parcela',
+CASE
+	WHEN V.Parcelas >1
+	THEN 'Parcelamento'
+	ELSE 'A Vista'
+END AS 'Tipo Pagamento'
+FROM
+		VENDAS V
+INNER JOIN
+		MOTO M
+ON
+		M.Id_Moto = V.Id_Moto
+INNER JOIN
+		Cliente C
+ON
+		C.Id_Cliente = V.Id_Cliente)
