@@ -1,0 +1,15 @@
+--PROCEDURE PARA ACHAR O EMAIL DO CLIENTE, LOCALIZANDO-O PELO NOME
+
+CREATE PROCEDURE Email_Cliente
+@NOME VARCHAR(200)
+AS
+BEGIN
+SELECT
+		C.Nome Nome,
+		C.Email Email
+FROM Cliente C
+WHERE
+		C.Nome LIKE '%'+ @NOME +'%'
+END
+
+EXEC Email_Cliente 'Rafa'
