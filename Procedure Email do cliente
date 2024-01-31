@@ -1,3 +1,9 @@
+                              -- Enclementos na Database Concessionaria:
+
+
+
+
+
 --PROCEDURE PARA ACHAR O EMAIL DO CLIENTE, LOCALIZANDO-O PELO NOME
 
 CREATE PROCEDURE Email_Cliente
@@ -12,4 +18,71 @@ WHERE
 		C.Nome LIKE '%'+ @NOME +'%'
 END
 
-EXEC Email_Cliente 'Rafa'
+EXEC Email_Cliente 'Rafa';
+
+
+
+
+
+
+--Essa trigger serve para quando você inserir alguma venda de uma moto da tabela [moto], seja inserido o id da moto pela descrição (nome da moto)
+
+CREATE TRIGGER Inserir_ID_Moto
+ON VENDAS
+FOR INSERT
+AS
+BEGIN	
+	UPDATE V
+	SET Id_Moto = M.Id_Moto
+	FROM VENDAS V
+	JOIN MOTO M
+ON M.Nome = (SELECT Nome_Moto FROM Vendas
+WHERE Id_Venda=V.Id_Venda)
+END
+
+--Procedure para add funcionario 
+CREATE PROCEDURE Adicionar_Funcionario
+@Cargo VARCHAR (300),
+@Setor VARCHAR (300),
+@Salario MONEY,
+@Data_Contratacao DATE,
+@VT VARCHAR (1),
+@VR VARCHAR (1),
+@VO VARCHAR (1),
+@VA VARCHAR (1)
+AS
+BEGIN
+	INSERT INTO Funcionario (Cargo,Setor,Salario,
+	Data_Contratacao,VT,VR,Vo,Va)
+VALUES(
+	@Cargo ,@Setor ,@Salario ,@Data_Contratacao,@VT ,@VR ,@VO ,@VA 
+)
+
+END
+
+-- exemplo:
+-- EXEC Adicionar_Funcionario 'Gerente de Sistemas','T.I',35725.93,'2024-01-28',NULL,NULL,'A','A'
+
+
+
+
+
+
+--Trigger feita para quando remover o funcionário atravéz da tabela [Dados_Funcionario], remova também os dados da tabela [Funcionário].
+--Desta maneira, não havendo nenhum resquicio desse funcionário.
+
+
+CREATE TRIGGER Remover_Funcionario
+ON DADOS_FUNCIONARIO
+FOR DELETE
+AS
+BEGIN
+	DELETE	F
+		FROM FUNCIONARIO F
+		JOIN deleted D
+	ON D.ID_FUNCIONARIO = F.ID_FUNCIONARIO	
+END;
+
+-- EXEMPLO:
+--DELETE DADOS_FUNCIONARIO WHERE ID_FUNCIONARIO =
+
