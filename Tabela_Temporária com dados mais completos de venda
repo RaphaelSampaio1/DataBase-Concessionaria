@@ -1,0 +1,48 @@
+                                -- Criação de Tabela Temporária com dados mais completos de sobre a venda :
+
+
+CREATE TABLE #Consulta_Ampla_Vendas(
+Cliente VARCHAR (320)	,
+Email VARCHAR (200),
+Celular VARCHAR (11),
+Data DATE,
+Moto VARCHAR(300),
+Marca VARCHAR (80),
+Categoria VARCHAR (200),
+Parcelas INT,
+Cor VARCHAR (90),
+Valor VARCHAR (50),
+Mensalidade_Parcela VARCHAR (50),
+Fornecedor VARCHAR (300)
+);
+	
+INSERT INTO #Consulta_Ampla_Vendas
+SELECT 
+		C.Nome Cliente,
+		c.Email Email,
+		C.Celular Cel,
+		V.Data_Venda AS 'Data Venda',
+		V.Nome_Moto Moto,
+		M.Marca,
+		M.Categoria,
+		V.Parcelas,
+		M.Cor,
+		FORMAT(M.Valor,'C') AS 'Valor Moto',
+		FORMAT(M.Valor / V.Parcelas,'C')  AS 'Mensalidade Parcela',
+		F.Razao_Social Fornecedor
+FROM 
+	Vendas V
+JOIN 
+	Moto M 
+ON M.Id_Moto = V.Id_Moto
+JOIN
+	Fornecedor F
+ON
+	F.Id_fornecedor = M.Id_Fornecedor
+JOIN
+	Cliente C
+ON C.Id_Cliente = V.Id_Cliente;
+
+
+
+SELECT * FROM #Consulta_Ampla_Vendas;
