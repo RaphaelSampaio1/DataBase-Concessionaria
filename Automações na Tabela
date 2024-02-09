@@ -86,3 +86,31 @@ END;
 -- EXEMPLO:
 --DELETE DADOS_FUNCIONARIO WHERE ID_FUNCIONARIO =
 
+
+
+
+
+-- Function para trazer nome da moto (sem precisar fazer joins)
+CREATE FUNCTION FC_NOME_MOTO(@ID INT)
+RETURNS  TABLE
+AS
+RETURN(
+
+	SELECT M.Nome
+		FROM MOTO M
+	WHERE Id_Moto = @ID
+);
+
+
+
+-- Function para trazer nome do Cliente (sem precisar fazer joins)
+
+CREATE FUNCTION FC_NOME_CLIENTE (@ID INT)
+RETURNS TABLE
+AS 
+RETURN(
+	SELECT Nome
+		FROM Cliente
+	WHERE Id_Cliente =@ID
+);
+
