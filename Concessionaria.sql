@@ -1,3 +1,9 @@
+--> OBS.: EXECUTE PRIMEIRO CREATE DATABASE 
+--> EXECUTE USE  
+--> REMOVA OS SELECTS + CREATE DATABASE + USE 
+--> SELECIONE NO TECLADO CTRL + A 
+--> F5(RODAR)
+
 CREATE DATABASE Concessionaria;
 USE Concessionaria;
 
@@ -262,7 +268,8 @@ Telefone VARCHAR (11),
 Celular VARCHAR (11),
 Rua VARCHAR (300),
 Bairro VARCHAR (200),
-Numero INT
+Numero INT,
+Email VARCHAR(250)
 );
 
 INSERT INTO Cliente (Nome, Cpf, Data_Nascimento, Telefone, Celular, Rua, Bairro, Numero,Email)
@@ -364,6 +371,7 @@ Id_Venda INT IDENTITY(1,1) PRIMARY KEY,
 Id_Moto INT FOREIGN KEY REFERENCES Moto(Id_Moto),
 Parcelas INT DEFAULT 1,
 Nm_Nf VARCHAR(16) DEFAULT LEFT(CONVERT(VARCHAR(36),NEWID()),14),
+DATA_VENDA DATE,
 Id_Cliente  INT FOREIGN KEY REFERENCES Cliente(Id_Cliente)
 );
 
@@ -1031,3 +1039,23 @@ VALUES
 ('Muito feliz com minha escolha.', 29, CONVERT(DATE, '2022-07-11')),
 ('Excelente qualidade dos produtos oferecidos.', 41, CONVERT(DATE, '2022-04-20')),
 ('Foi uma experiência de compra muito positiva.', 33, CONVERT(DATE, '2022-12-30'));
+
+
+
+ALTER TABLE VENDAS
+ADD Valor_Compra_Moto MONEY
+
+
+UPDATE Vendas 
+SET VENDAS.VALOR_COMPRA_MOTO = M.VALOR
+FROM Vendas	
+JOIN Moto M
+	ON M.Id_Moto = Vendas.Id_Moto
+
+
+
+ALTER TABLE MOTO
+ADD Data_Atualizacao DATETIME DEFAULT GETDATE();
+
+UPDATE Moto
+SET Data_Atualizacao = '2020-05-20T00:00:00.000';
