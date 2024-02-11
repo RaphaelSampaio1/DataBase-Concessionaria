@@ -4,27 +4,6 @@
 
 
 
---PROCEDURE PARA ACHAR O EMAIL DO CLIENTE, LOCALIZANDO-O PELO NOME
-
-CREATE PROCEDURE Email_Cliente
-@NOME VARCHAR(200)
-AS
-BEGIN
-SELECT
-		C.Nome Nome,
-		C.Email Email
-FROM Cliente C
-WHERE
-		C.Nome LIKE '%'+ @NOME +'%'
-END
-
-EXEC Email_Cliente 'Rafa';
-
-
-
-
-
-
 --Essa trigger serve para quando você inserir alguma venda de uma moto da tabela [moto], seja inserido o id da moto pela descrição (nome da moto)
 
 CREATE TRIGGER Inserir_ID_Moto
@@ -114,3 +93,71 @@ RETURN(
 	WHERE Id_Cliente =@ID
 );
 
+
+
+
+
+
+
+
+-- INSERIR DADO DE ATUALIZAÇÃO NA TABELA DE MOTO, PARA QUANDO, CADA VEZ QUE FOR ATUALIZADO O VALOR DA MOTO, APARECA A DATA
+CREATE TRIGGER Auto_Update_Atualizacao
+ON MOTO
+AFTER UPDATE
+AS
+ BEGIN
+IF UPDATE (NOME) OR UPDATE (MARCA) OR UPDATE (ANO) OR UPDATE(COR) OR UPDATE(VALOR) 
+OR UPDATE(QUANTIDADE) OR UPDATE (CILINDRADA) OR UPDATE(CATEGORIA) OR UPDATE (ID_FORNECEDOR)
+ BEGIN
+	UPDATE MOTO
+	SET Data_Atualizacao = GETDATE()
+	FROM MOTO
+	JOIN inserted
+	ON MOTO.Id_Moto = inserted.Id_Moto
+  END
+END;
+
+
+
+
+-- FAZER UMA TRIGGER QUE ATUALIZE O VALOR DA MOTO A CADA VEZ QUE O VALOR DO FORNECEDOR ATUALIZAR, ATUALIZE NO ESTOQUE DAS MOTOS
+
+CREATE TRIGGER Atualizar_Preco_Moto_Depara_Fornecedor
+ON Precificacao_Fornecedor
+FOR UPDATE
+AS
+	BEGIN
+	IF UPDATE(VALOR)
+	BEGIN
+UPDATE MOTO
+	SET Valor = I.Valor  * 1.27
+	FROM Moto
+	JOIN inserted I
+	ON I.Moto = Moto.Nome
+	JOIN deleted D
+	ON D.Moto = Moto.Nome
+	WHERE I.Valor <D.Valor
+	END
+END;
+
+
+
+
+
+CREATE TRIGGER Atualizar_Preco_Moto_Depara_Fornecedor2
+ON Precificacao_Fornecedor
+FOR UPDATE
+AS
+	BEGIN
+	IF UPDATE(VALOR)
+	BEGIN
+UPDATE MOTO
+	SET Valor = I.Valor  * 1.27
+	FROM Moto
+	JOIN inserted I
+	ON I.Moto = Moto.Nome
+	JOIN deleted D
+	ON D.Moto = Moto.Nome
+	WHERE I.Valor > D.Valor
+	END
+END;
