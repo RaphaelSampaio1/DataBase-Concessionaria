@@ -1,23 +1,13 @@
 --> OBS.: EXECUTE PRIMEIRO CREATE DATABASE 
 --> EXECUTE USE  
---> REMOVA OS SELECTS + CREATE DATABASE + USE 
+--> REMOVA CREATE DATABASE + USE 
 --> SELECIONE NO TECLADO CTRL + A 
 --> F5(RODAR)
 
 CREATE DATABASE Concessionaria;
+
 USE Concessionaria;
 
-
-
-
-SELECT * FROM Dados_Funcionario;
-SELECT * FROM Funcionario;
-SELECT * FROM Moto;
-SELECT * FROM Vendas;
-SELECT * FROM Cliente;
-SELECT * FROM FORNECEDOR;
-SELECT * FROM Precificacao_Fornecedor;
-SELECT * FROM Feedback
 
 CREATE TABLE Funcionario(
 Id_Funcionario INT IDENTITY(1,1) PRIMARY KEY,
